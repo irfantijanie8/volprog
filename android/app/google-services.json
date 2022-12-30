@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "534726813655",
+    "project_id": "volprog-1845c",
+    "storage_bucket": "volprog-1845c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:534726813655:android:03816a2d9a7444f5d74d92",
+        "android_client_info": {
+          "package_name": "com.example.volprog"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "534726813655-k2sst8n39i40852jmi1t3ppmmkh9e0g8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATEzbFsbrvoFnELvUN3z6uwkSYM1XkZZg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "534726813655-k2sst8n39i40852jmi1t3ppmmkh9e0g8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
