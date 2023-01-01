@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:volprog/create_event.dart';
 import 'package:volprog/get_user_name.dart';
 
 class HomePage extends StatefulWidget {
@@ -40,6 +41,16 @@ class _HomePageState extends State<HomePage> {
             },
             color: Colors.deepPurple[200],
             child: Text('Sign out'),
+          ),
+          ElevatedButton(
+            child: Text('Register Event'),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => createEvent()));
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.purple,
+            ),
           ),
           Expanded(
               child: FutureBuilder(
