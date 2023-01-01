@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+
+import 'pickmap.dart';
 
 class createEvent extends StatefulWidget {
   const createEvent({super.key});
@@ -26,18 +29,23 @@ class _createEventState extends State<createEvent> {
   String dateFormat = 'DD/MM/YY';
   String timeFormat = 'HH:MM';
 
+  String latitude = '';
+  String longitude = '';
+  String place = '';
+  var info = new Map();
+
   //controller
   final _eventNameController = TextEditingController();
-  final _eventDateController = TextEditingController();
-  final _eventTimeController = TextEditingController();
-  final _eventLocationController = TextEditingController();
+  final _eventDescriptionController = TextEditingController();
+  final _eventNeeds1Controller = TextEditingController();
+  final _eventNeeds2Controller = TextEditingController();
 
   @override
   void dispose() {
     _eventNameController.dispose();
-    _eventDateController.dispose();
-    _eventTimeController.dispose();
-    _eventLocationController.dispose();
+    _eventDescriptionController.dispose();
+    _eventNeeds1Controller.dispose();
+    _eventNeeds2Controller.dispose();
   }
 
   //upload file
@@ -67,9 +75,15 @@ class _createEventState extends State<createEvent> {
 
     DocumentReference docRef =
         await FirebaseFirestore.instance.collection('event').add({
+      'organizer': user.uid,
       'event name': _eventNameController.text.trim(),
       'event date': '${eventDate.day}/${eventDate.month}/${eventDate.year}',
       'event time': '${eventTime.hour}:${eventTime.minute}',
+      'latitude': latitude,
+      'longitude': longitude,
+      'description': _eventDescriptionController.text.trim(),
+      'needs 1': _eventNeeds1Controller.text.trim(),
+      'needs 2': _eventNeeds2Controller.text.trim(),
     });
 
     await FirebaseFirestore.instance
@@ -79,6 +93,7 @@ class _createEventState extends State<createEvent> {
       'event id': docRef.id,
     });
     if (pickedFile!.name != "") uploadFile(docRef);
+
     Navigator.pop(context);
   }
 
@@ -95,7 +110,7 @@ class _createEventState extends State<createEvent> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Text(
                   'Create Event',
                   style: TextStyle(
@@ -243,10 +258,55 @@ class _createEventState extends State<createEvent> {
                     ),
                   ],
                 ),
-
                 SizedBox(height: 20),
 
-                //time textfield
+                //text get location
+                // Text('Location',
+                //     style:
+                //         TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+
+                //get location
+                Row(
+                  children: [
+                    SelectionButton(onInfoChanged: (newInfo) {
+                      info = newInfo;
+                      setState(() {
+                        place = info["places"];
+                        latitude = info['latitude'];
+                        longitude = info['longitude'];
+                      });
+                    }),
+
+                    //location box
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        width: 230,
+                        height: 46,
+                        child: Center(
+                          child: Text(
+                            (place),
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+
+                //Description
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0, right: 230),
+                  child: Text('Description',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
@@ -256,13 +316,67 @@ class _createEventState extends State<createEvent> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: TextField(
-                        controller: _eventLocationController,
-                        obscureText: true,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        controller: _eventDescriptionController,
                         decoration: InputDecoration(
                           border: InputBorder.none,
-                          hintText: 'Location',
+                          hintText: 'Description',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 20),
+
+                //Needs
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0, right: 276),
+                  child: Text('Needs',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: TextField(
+                        controller: _eventNeeds1Controller,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Needs 1',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 25,
+                    right: 25,
+                    top: 5,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: TextField(
+                        controller: _eventNeeds2Controller,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Needs 2',
                         ),
                       ),
                     ),
@@ -272,6 +386,7 @@ class _createEventState extends State<createEvent> {
 
                 //insert image
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -314,7 +429,7 @@ class _createEventState extends State<createEvent> {
                             fontSize: 12, fontWeight: FontWeight.bold)),
                   ),
 
-                SizedBox(height: 20),
+                SizedBox(height: 15),
                 //create event button
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25),
@@ -342,5 +457,68 @@ class _createEventState extends State<createEvent> {
         ),
       ),
     );
+  }
+}
+
+//get data from widget
+class SelectionButton extends StatefulWidget {
+  final ValueChanged<Map> onInfoChanged;
+
+  const SelectionButton({Key? key, required this.onInfoChanged})
+      : super(key: key);
+
+  @override
+  State<SelectionButton> createState() => _SelectionButtonState();
+}
+
+class _SelectionButtonState extends State<SelectionButton> {
+  late var result = new Map();
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 25.0),
+      child: ElevatedButton(
+        onPressed: () async {
+          result = await _navigateAndDisplaySelection(context);
+          widget.onInfoChanged(result);
+        },
+        style: ElevatedButton.styleFrom(
+            primary: Colors.deepPurple,
+            textStyle: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            )),
+        child: const Text('Get location'),
+      ),
+    );
+  }
+
+  // A method that launches the SelectionScreen and awaits the result from
+  // Navigator.pop.
+  Future<Map> _navigateAndDisplaySelection(BuildContext context) async {
+    // Navigator.push returns a Future that completes after calling
+    // Navigator.pop on the Selection Screen.
+
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => Home()),
+    );
+
+    // When a BuildContext is used from a StatefulWidget, the mounted property
+    // must be checked after an asynchronous gap.
+    if (!mounted)
+      return {
+        "latitude": "",
+        "longitude": "",
+        "places": "",
+      };
+
+    // After the Selection Screen returns a result, hide any previous snackbars
+    // and show the new result.
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(result['latitude'])));
+
+    return result;
   }
 }

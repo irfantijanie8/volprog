@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:volprog/create_event.dart';
 import 'package:volprog/get_user_name.dart';
 
+import 'pickmap.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -52,6 +54,19 @@ class _HomePageState extends State<HomePage> {
               primary: Colors.purple,
             ),
           ),
+
+          //testmap
+          ElevatedButton(
+            child: Text('test map'),
+            onPressed: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => Home()));
+            },
+            style: ElevatedButton.styleFrom(
+              primary: Colors.purple,
+            ),
+          ),
+
           Expanded(
               child: FutureBuilder(
             future: getDocId(),

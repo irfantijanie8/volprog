@@ -1,9 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.volprog">
+    
+    <!--API KEY permission-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
    <application
         android:label="volprog"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
+
+        <!--API KEY for location-->
+        <meta-data android:name="com.google.android.geo.API_KEY"  
+             android:value="AIzaSyBVS7Prbzqe-_3h_HRA5kCPLoxToFLwVg8"
+             />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"
