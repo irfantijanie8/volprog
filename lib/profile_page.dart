@@ -45,7 +45,8 @@ class _profilePageState extends State<profilePage> {
         ),
         centerTitle: true,
         backgroundColor: Colors.grey[300],
-        title: const Center(
+        title: const Align(
+          alignment: Alignment.topLeft,
           child: Text(
             "Profile Screen",
             style: TextStyle(

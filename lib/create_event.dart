@@ -91,7 +91,27 @@ class _createEventState extends State<createEvent> {
   Future eventCreation() async {
     String name = _eventNameController.text.trim();
 
-    if (name == "") return;
+    if (name == "") {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Put in the event name')));
+      return;
+    } else if (latitude == "") {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Please choose event location')));
+      return;
+    } else if (_eventDescriptionController.text.trim() == "") {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Put in the event description')));
+      return;
+    } else if (pickedFile == null) {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Please upload an image')));
+      return;
+    }
 
     DocumentReference docRef =
         await FirebaseFirestore.instance.collection('event').add({
@@ -99,8 +119,8 @@ class _createEventState extends State<createEvent> {
       'event name': _eventNameController.text.trim(),
       'event date': '${eventDate.day}/${eventDate.month}/${eventDate.year}',
       'event time': '${eventTime.hour}:${eventTime.minute}',
-      'latitude': latitude,
-      'longitude': longitude,
+      'latitude': double.parse(latitude),
+      'longitude': double.parse(longitude),
       'description': _eventDescriptionController.text.trim(),
       'needs 1': _eventNeeds1Controller.text.trim(),
       'needs 2': _eventNeeds2Controller.text.trim(),
@@ -117,6 +137,17 @@ class _createEventState extends State<createEvent> {
         .set({
       'event id': docRef.id,
     });
+
+    //enable if no choice
+    // if (pickedFile == null) {
+    //   FirebaseFirestore.instance
+    //       .collection('event')
+    //       .doc(docRef.id)
+    //       .set({'image': ''}, SetOptions(merge: true)).then((value) {
+    //     //Do your stuff.
+    //   });
+    //   Navigator.pop(context);
+    // }
     if (pickedFile!.name != "") {
       image = await uploadFile(docRef);
       print("url = $image");
@@ -146,7 +177,26 @@ class _createEventState extends State<createEvent> {
     return Scaffold(
       backgroundColor: Colors.blueGrey[200],
       appBar: AppBar(
-        title: Text('Create New Event'),
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [Colors.deepPurple, Colors.purple],
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  stops: const [0.2, 0.9])),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.grey[300],
+        title: const Align(
+          alignment: Alignment.topLeft,
+          child: Text(
+            "Create New Event",
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         child: Center(
@@ -294,7 +344,7 @@ class _createEventState extends State<createEvent> {
                         height: 46,
                         child: Center(
                           child: Text(
-                            timeFormat,
+                            '${eventTime.hour}:${eventTime.minute}',
                             style: TextStyle(fontSize: 14),
                           ),
                         ),
@@ -483,7 +533,7 @@ class _createEventState extends State<createEvent> {
                 //ingredient
                 Padding(
                   padding: const EdgeInsets.only(bottom: 5.0, right: 276),
-                  child: Text('Needs',
+                  child: Text('Ingredient',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 ),
@@ -629,6 +679,9 @@ class _createEventState extends State<createEvent> {
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: 20,
+                )
               ],
             ),
           ),
