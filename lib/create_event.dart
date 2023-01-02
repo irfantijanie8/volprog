@@ -42,6 +42,7 @@ class _createEventState extends State<createEvent> {
   //controller
   final _eventNameController = TextEditingController();
   final _eventDescriptionController = TextEditingController();
+  final _eventLocationController = TextEditingController();
   final _eventNeeds1Controller = TextEditingController();
   final _eventNeeds2Controller = TextEditingController();
   final _eventNeeds3Controller = TextEditingController();
@@ -62,6 +63,7 @@ class _createEventState extends State<createEvent> {
     _eventIng1Controller.dispose();
     _eventIng2Controller.dispose();
     _eventIng3Controller.dispose();
+    _eventLocationController.dispose();
   }
 
   //upload file
@@ -116,11 +118,12 @@ class _createEventState extends State<createEvent> {
     DocumentReference docRef =
         await FirebaseFirestore.instance.collection('event').add({
       'organizer': user.uid,
-      'event name': _eventNameController.text.trim(),
+      'title': _eventNameController.text.trim(),
       'event date': '${eventDate.day}/${eventDate.month}/${eventDate.year}',
       'event time': '${eventTime.hour}:${eventTime.minute}',
       'latitude': double.parse(latitude),
       'longitude': double.parse(longitude),
+      'location': _eventLocationController.text.trim(),
       'description': _eventDescriptionController.text.trim(),
       'needs 1': _eventNeeds1Controller.text.trim(),
       'needs 2': _eventNeeds2Controller.text.trim(),
@@ -222,6 +225,12 @@ class _createEventState extends State<createEvent> {
                 SizedBox(height: 10),
 
                 //event name textfield
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0, right: 290),
+                  child: Text('Title',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Container(
@@ -354,6 +363,38 @@ class _createEventState extends State<createEvent> {
                 ),
                 SizedBox(height: 20),
 
+                //Location box
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0, right: 250),
+                  child: Text('Location',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: TextField(
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        controller: _eventLocationController,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Location',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 8,
+                ),
                 //text get location
                 // Text('Location',
                 //     style:
@@ -396,7 +437,7 @@ class _createEventState extends State<createEvent> {
 
                 //Description
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 5.0, right: 230),
+                  padding: const EdgeInsets.only(bottom: 5.0, right: 235),
                   child: Text('Description',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -748,7 +789,7 @@ class _SelectionButtonState extends State<SelectionButton> {
     // and show the new result.
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text(result['latitude'])));
+      ..showSnackBar(SnackBar(content: Text(result['places'])));
 
     return result;
   }
