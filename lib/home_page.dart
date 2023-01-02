@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:volprog/create_event.dart';
 import 'package:volprog/get_user_name.dart';
+import 'profile_page.dart';
 
 import 'pickmap.dart';
 
@@ -57,10 +58,10 @@ class _HomePageState extends State<HomePage> {
 
           //testmap
           ElevatedButton(
-            child: Text('test map'),
+            child: Text('Profile Page'),
             onPressed: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Home()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => profilePage()));
             },
             style: ElevatedButton.styleFrom(
               primary: Colors.purple,
