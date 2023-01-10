@@ -46,6 +46,9 @@ dependencies:
   google_api_headers: ^1.1.0
   geolocator: ^9.0.2
   firebase_core: ^2.4.0
+  syncfusion_flutter_pdf: ^20.2.36
+  path_provider: ^2.0.11
+  open_file: ^3.2.1
 
 dev_dependencies:
   flutter_test:
@@ -75,6 +78,8 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - assets/images/
+    - assets/images/pdf.png
+    - assets/images/volcert.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
