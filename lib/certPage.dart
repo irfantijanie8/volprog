@@ -63,7 +63,7 @@ class _certPageState extends State<certPage> {
     );
   }
 
-  Future<void> _createPDF() async {
+  Future<void> _createPDF(String type) async {
     PdfDocument document = PdfDocument();
     document.pageSettings.orientation = PdfPageOrientation.landscape;
     final page = document.pages.add();
@@ -71,15 +71,24 @@ class _certPageState extends State<certPage> {
     page.graphics.drawImage(PdfBitmap(await _readImageData('volcert.png')),
         Rect.fromLTWH(0, 0, 0, 0));
     page.graphics.drawImage(PdfBitmap(await _readImageData('pdf.png')),
-        Rect.fromLTWH(80, 180, 0, 0));
+        Rect.fromLTWH(60, 160, 0, 0));
+
+    page.graphics.drawImage(PdfBitmap(await _readImageData('$type.png')),
+        Rect.fromLTWH(310, 20, 0, 0));
 
     PdfFont font = PdfStandardFont(PdfFontFamily.helvetica, 12);
     String fullName = info["name"];
     double size = fullName.length.toDouble();
+    // page.graphics.drawString(
+    //     fullName, PdfStandardFont(PdfFontFamily.helvetica, 30),
+    //     brush: PdfBrushes.black,
+    //     bounds: Rect.fromLTWH((420 - (8.5 * size)), 310, 0, 0)); //200 - 700
+
     page.graphics.drawString(
-        fullName, PdfStandardFont(PdfFontFamily.helvetica, 30),
+        fullName, //46 char
+        PdfStandardFont(PdfFontFamily.helvetica, 30),
         brush: PdfBrushes.black,
-        bounds: Rect.fromLTWH((450 - (8.5 * size)), 340, 0, 0)); //200 - 700
+        bounds: Rect.fromLTWH((420 - (8.5 * size)), 310, 0, 0)); //200 - 700
 
     List<int> bytes = await document.save();
     document.dispose();
@@ -95,7 +104,8 @@ class _certPageState extends State<certPage> {
   showwidget() {
     if (info["eventNum"] >= 5 && info["eventNum"] < 10) {
       return ElevatedButton(
-          onPressed: _createPDF, child: Text('Silver Certification'));
+          onPressed: () => _createPDF("silver"),
+          child: Text('Silver Certification'));
     } else if (info["eventNum"] >= 10) {
       return Container(
         child: Center(
@@ -104,9 +114,11 @@ class _certPageState extends State<certPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 ElevatedButton(
-                    onPressed: _createPDF, child: Text('Silver Certification')),
+                    onPressed: () => _createPDF("silver"),
+                    child: Text('Silver Certification')),
                 ElevatedButton(
-                    onPressed: _createPDF, child: Text('Gold Certification'))
+                    onPressed: () => _createPDF("gold"),
+                    child: Text('Gold Certification'))
               ]),
         ),
       );
