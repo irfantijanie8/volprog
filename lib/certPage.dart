@@ -5,7 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 
 class certPage extends StatefulWidget {
-  final String text;
+  final Map text;
   certPage({Key? key, required this.text}) : super(key: key);
 
   @override
@@ -13,8 +13,8 @@ class certPage extends StatefulWidget {
 }
 
 class _certPageState extends State<certPage> {
-  late String name;
-  _certPageState(this.name);
+  late Map info;
+  _certPageState(this.info);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,8 +48,15 @@ class _certPageState extends State<certPage> {
             SizedBox(
               height: 25,
             ),
-            ElevatedButton(
-                onPressed: _createPDF, child: Text('My Certification')),
+            // ElevatedButton(
+            //     onPressed: _createPDF, child: Text('My Certification')),
+            showwidget(),
+
+            // ElevatedButton(
+            //     onPressed: () {
+            //       print(info["eventNum"]);
+            //     },
+            //     child: Text('My Certification')),
           ],
         ),
       ),
@@ -67,7 +74,7 @@ class _certPageState extends State<certPage> {
         Rect.fromLTWH(80, 180, 0, 0));
 
     PdfFont font = PdfStandardFont(PdfFontFamily.helvetica, 12);
-    String fullName = name;
+    String fullName = info["name"];
     double size = fullName.length.toDouble();
     page.graphics.drawString(
         fullName, PdfStandardFont(PdfFontFamily.helvetica, 30),
@@ -83,5 +90,26 @@ class _certPageState extends State<certPage> {
   Future<Uint8List> _readImageData(String Name) async {
     final data = await rootBundle.load('assets/images/$Name');
     return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+  }
+
+  showwidget() {
+    if (info["eventNum"] >= 5 && info["eventNum"] < 10) {
+      return ElevatedButton(
+          onPressed: _createPDF, child: Text('Silver Certification'));
+    } else if (info["eventNum"] >= 10) {
+      return Container(
+        child: Center(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                    onPressed: _createPDF, child: Text('Silver Certification')),
+                ElevatedButton(
+                    onPressed: _createPDF, child: Text('Gold Certification'))
+              ]),
+        ),
+      );
+    }
   }
 }

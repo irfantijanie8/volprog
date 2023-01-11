@@ -17,6 +17,7 @@ class _profilePageState extends State<profilePage> {
   String? name = '';
   String? email = '';
   String? image = '';
+  int? eventNum = 0;
   File? imageXFile;
 
   Future _getDataFromDatabase() async {
@@ -30,6 +31,7 @@ class _profilePageState extends State<profilePage> {
           name = snapshot.data()!['full name'];
           email = snapshot.data()!['email'];
           image = snapshot.data()!['userImage'];
+          eventNum = snapshot.data()!['event num'];
         });
       }
     });
@@ -121,7 +123,8 @@ class _profilePageState extends State<profilePage> {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => certPage(text: name!)));
+                        builder: (context) => certPage(
+                            text: {"name": name, "eventNum": eventNum})));
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.purple,
