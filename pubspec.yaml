@@ -49,6 +49,7 @@ dependencies:
   syncfusion_flutter_pdf: ^20.2.36
   path_provider: ^2.0.11
   open_file: ^3.2.1
+  dropdown_button2: ^1.9.2
 
 dev_dependencies:
   flutter_test:

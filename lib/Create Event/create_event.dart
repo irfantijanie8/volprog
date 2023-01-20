@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 import 'pickmap.dart';
 
@@ -39,6 +40,19 @@ class _createEventState extends State<createEvent> {
   String image = '';
   var info = new Map();
 
+  //bank Acc name
+  final List<String> items = [
+    'Affin Bank Berhad',
+    'Alliance Bank Malaysia Berhad',
+    'CIMB Bank Berhad',
+    'Malayan Banking Berhad',
+    'Bank Islam Malaysia Berhad',
+    'RHB Bank Berhad',
+    'Public Bank Berhad',
+    'OCBC Bank (Malaysia) Berhad',
+  ];
+  String? selectedValue;
+
   //controller
   final _eventNameController = TextEditingController();
   final _eventDescriptionController = TextEditingController();
@@ -52,6 +66,8 @@ class _createEventState extends State<createEvent> {
   final _eventIng2Controller = TextEditingController();
   final _eventIng3Controller = TextEditingController();
 
+  final _eventAcc = TextEditingController();
+
   @override
   void dispose() {
     _eventNameController.dispose();
@@ -64,6 +80,7 @@ class _createEventState extends State<createEvent> {
     _eventIng2Controller.dispose();
     _eventIng3Controller.dispose();
     _eventLocationController.dispose();
+    _eventAcc.dispose();
   }
 
   //upload file
@@ -97,6 +114,17 @@ class _createEventState extends State<createEvent> {
       ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
         ..showSnackBar(SnackBar(content: Text('Put in the event name')));
+      return;
+    } else if (_eventAcc.text.trim() == "") {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(
+            SnackBar(content: Text('Please fill in Account Number')));
+      return;
+    } else if (selectedValue == null) {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('Please Select Bank')));
       return;
     } else if (latitude == "") {
       ScaffoldMessenger.of(context)
@@ -132,6 +160,8 @@ class _createEventState extends State<createEvent> {
       'ingredient 1': _eventIng1Controller.text.trim(),
       'ingredient 2': _eventIng2Controller.text.trim(),
       'ingredient 3': _eventIng3Controller.text.trim(),
+      'Bank Name': selectedValue,
+      'Bank Account': _eventAcc.text.trim(),
     });
 
     await FirebaseFirestore.instance
@@ -573,7 +603,7 @@ class _createEventState extends State<createEvent> {
 
                 //ingredient
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 5.0, right: 276),
+                  padding: const EdgeInsets.only(bottom: 5.0, right: 250),
                   child: Text('Ingredient',
                       style:
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
@@ -644,6 +674,126 @@ class _createEventState extends State<createEvent> {
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: 'Ingredient 3',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                //Bank Account
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0, right: 200),
+                  child: Text('Donation Details',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                ),
+                //Drop Down Bank
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0, right: 185),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton2(
+                      isExpanded: true,
+                      hint: Row(
+                        children: const [
+                          Icon(
+                            Icons.list,
+                            size: 16,
+                            color: Colors.black,
+                          ),
+                          SizedBox(
+                            width: 4,
+                          ),
+                          Expanded(
+                            child: Text(
+                              'Select Bank',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                      items: items
+                          .map((item) => DropdownMenuItem<String>(
+                                value: item,
+                                child: Text(
+                                  item,
+                                  style: const TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ))
+                          .toList(),
+                      value: selectedValue,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedValue = value as String;
+                        });
+                      },
+                      icon: const Icon(
+                        Icons.arrow_forward_ios_outlined,
+                      ),
+                      iconSize: 14,
+                      iconEnabledColor: Colors.black,
+                      iconDisabledColor: Colors.grey,
+                      buttonHeight: 50,
+                      buttonWidth: 160,
+                      buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+                      buttonDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: Colors.black26,
+                        ),
+                        color: Colors.white,
+                      ),
+                      buttonElevation: 2,
+                      itemHeight: 40,
+                      itemPadding: const EdgeInsets.only(left: 14, right: 14),
+                      dropdownMaxHeight: 200,
+                      dropdownWidth: 200,
+                      dropdownPadding: null,
+                      dropdownDecoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(14),
+                        color: Colors.white,
+                      ),
+                      dropdownElevation: 8,
+                      scrollbarRadius: const Radius.circular(40),
+                      scrollbarThickness: 6,
+                      scrollbarAlwaysShow: true,
+                      offset: const Offset(-20, 0),
+                    ),
+                  ),
+                ),
+
+                //Bank number
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 25,
+                    right: 25,
+                    top: 5,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                      child: TextField(
+                        controller: _eventAcc,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: 'Account Number',
                         ),
                       ),
                     ),
@@ -722,7 +872,7 @@ class _createEventState extends State<createEvent> {
                 ),
                 SizedBox(
                   height: 20,
-                )
+                ),
               ],
             ),
           ),
