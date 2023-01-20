@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:volprog/create_event.dart';
-import 'package:volprog/get_user_name.dart';
-import 'profile_page.dart';
-
-import 'pickmap.dart';
+import 'package:volprog/Create Event/create_event.dart';
+import 'package:volprog/Profile/profile_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -56,7 +53,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          //testmap
+          //testprofile
           ElevatedButton(
             child: Text('Profile Page'),
             onPressed: () {
@@ -68,20 +65,20 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
 
-          Expanded(
-              child: FutureBuilder(
-            future: getDocId(),
-            builder: (context, snapshot) {
-              return ListView.builder(
-                  itemCount: docIDs.length,
-                  itemBuilder: (context, index) {
-                    return ListTile(
-                        title: GetUserName(
-                      documentId: docIDs[index],
-                    ));
-                  });
-            },
-          ))
+          // Expanded(
+          //     child: FutureBuilder(
+          //   future: getDocId(),
+          //   builder: (context, snapshot) {
+          //     return ListView.builder(
+          //         itemCount: docIDs.length,
+          //         itemBuilder: (context, index) {
+          //           return ListTile(
+          //               title: GetUserName(
+          //             documentId: docIDs[index],
+          //           ));
+          //         });
+          //   },
+          // ))
         ],
       )),
     );

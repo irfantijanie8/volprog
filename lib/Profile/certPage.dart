@@ -102,7 +102,9 @@ class _certPageState extends State<certPage> {
   }
 
   showwidget() {
-    if (info["eventNum"] >= 5 && info["eventNum"] < 10) {
+    if (info["eventNum"] < 5) {
+      return Center(child: Text("No Certification Available"));
+    } else if (info["eventNum"] >= 5 && info["eventNum"] < 10) {
       return ElevatedButton(
           onPressed: () => _createPDF("silver"),
           child: Text('Silver Certification'));
